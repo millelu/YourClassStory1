@@ -359,410 +359,423 @@ export default function App() {
     const barsBottom = Math.max(b0, b1, b2);
 
     // Remedies (same size as summary)
-// ✅ Keep your final wording exactly as requested:
-const remedies =
-  "The ATA’s $500 million/year proposal for a complexity-weighted Student-Teacher Ratio (STR) would compel school administrators and school divisions to remedy classes that exceed the weighted STR by hiring additional teachers, assigning multiple teachers to a classroom, increasing assistance and professional supports, or providing teachers with additional release time. This flexibility ensures that no student in Alberta goes without an education due to hard caps, while the province continues building more classrooms to meet future needs.";
+    // ✅ Keep your final wording exactly as requested:
+    const remedies =
+      "The ATA’s $500 million/year proposal for a complexity-weighted Student-Teacher Ratio (STR) would compel school administrators and school divisions to remedy classes that exceed the weighted STR by hiring additional teachers, assigning multiple teachers to a classroom, increasing assistance and professional supports, or providing teachers with additional release time. This flexibility ensures that no student in Alberta goes without an education due to hard caps, while the province continues building more classrooms to meet future needs.";
 
-// Place the paragraph safely under the bars
-const remediesStartY = Math.min(barsBottom + 80, size - padding - 220);
-g.fillStyle = "#111827";
+    // Place the paragraph safely under the bars
+    const remediesStartY = Math.min(barsBottom + 80, size - padding - 220);
+    g.fillStyle = "#111827";
 
-// Reserve vertical room so pills/footer can still render
-const reservedForFooter = 76; // ~ pills + spacing
-const availableHeight = Math.max(60, size - padding - reservedForFooter - remediesStartY);
-
-// ✅ Auto-fit the paragraph. It will reduce font size as needed to fit.
-const remediesBottom = drawAutoFitParagraph(
-  g,
-  remedies,
-  padding,
-  remediesStartY,
-  size - padding * 2,
-  availableHeight,
-  30, // start size
-  16  // minimum size
-);
-
-// Footer pills + StopTheExcuses.ca (unchanged)
-const footerY = Math.max(remediesBottom + 36, size - padding + 8);
-const pills = buildPills(tags, overLimit);
-let px = padding;
-g.font = "700 20px Inter, ui-sans-serif, system-ui, -apple-system";
-for (const text of pills) {
-  const tw = g.measureText(text).width + 24;
-  roundRect(g, px, footerY - 26, tw, 28, 14);
-  g.fillStyle = "#111827";
-  g.fill();
-  g.fillStyle = "#FFFFFF";
-  g.fillText(text, px + 12, footerY - 6);
-  px += tw + 10;
-}
-const ste = "StopTheExcuses.ca";
-const steW = g.measureText(ste).width + 28;
-roundRect(g, size - padding - steW, footerY - 26, steW, 28, 14);
-g.fillStyle = "#111827";
-g.fill();
-g.fillStyle = "#FFFFFF";
-g.fillText(ste, size - padding - steW + 14, footerY - 6);
-
-  // ---- Tiny self-tests (don’t modify UI) ----
-  useEffect(() => {
-    const approx = (a: number, b: number, t = 1e-3) => Math.abs(a - b) <= t;
-    const w1 = 20 * 1.0;
-    console.assert(approx(w1, 20), "All-typical math");
-    const w2 = 10 * 1 + 5 * 1.5 + 2 * 2;
-    console.assert(approx(w2, 21.5), "Mixed weights math");
-    const cap = Math.min(24, 36);
-    console.assert(cap === 24, "Lab/shop cap");
-  }, []);
-
-  // ---- UI helpers ----
-  function NumberField({
-    label,
-    value,
-    onChange,
-    disabled = false,
-    help,
-  }: {
-    label: string;
-    value: number;
-    onChange?: (v: number) => void;
-    disabled?: boolean;
-    help?: string;
-  }) {
-    return (
-      <label className={`block ${disabled ? "opacity-75" : ""}`}>
-        <span className="text-sm text-slate-700">{label}</span>
-        <input
-          type="number"
-          min={0}
-          value={value}
-          disabled={disabled}
-          onChange={(e) => onChange?.(Number(e.target.value))}
-          className="mt-1 w-full bg-white border border-black/10 rounded-xl px-3 py-2"
-        />
-        {help && <div className="text-xs text-slate-700 mt-1">{help}</div>}
-      </label>
+    // Reserve vertical room so pills/footer can still render
+    const reservedForFooter = 76; // ~ pills + spacing
+    const availableHeight = Math.max(
+      60,
+      size - padding - reservedForFooter - remediesStartY
     );
-  }
 
-  function TagToggle({
-    label,
-    value,
-    onToggle,
-  }: {
-    label: string;
-    value: boolean;
-    onToggle: () => void;
-  }) {
-    return (
-      <button
-        type="button"
-        onClick={onToggle}
-        className={`text-sm px-3 py-2 rounded-lg border ${
-          value
-            ? "bg-black text-white border-black"
-            : "bg-white text-slate-800 border-black/10"
-        }`}
-      >
-        {label}
-      </button>
+    // ✅ Auto-fit the paragraph. It will reduce font size as needed to fit.
+    const remediesBottom = drawAutoFitParagraph(
+      g,
+      remedies,
+      padding,
+      remediesStartY,
+      size - padding * 2,
+      availableHeight,
+      30, // start size
+      16 // minimum size
     );
-  }
 
-  // ---- Render UI ----
-  return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-yellow-200 to-yellow-400 text-slate-900 px-5 py-8">
-      <div className="max-w-6xl mx-auto">
-        <header className="mb-6">
-          <h1 className="text-4xl font-extrabold tracking-tight">
-            Share Your Class Story
-          </h1>
-          <p className="text-slate-800/90 mt-2 text-sm md:text-base">
-            Select your grades, enter your class and complexity, then generate a
-            square graphic ready to post.
-          </p>
-        </header>
+    // Footer pills + StopTheExcuses.ca (unchanged)
+    const footerY = Math.max(remediesBottom + 36, size - padding + 8);
+    const pills = buildPills(tags, overLimit);
+    let px = padding;
+    g.font = "700 20px Inter, ui-sans-serif, system-ui, -apple-system";
+    for (const text of pills) {
+      const tw = g.measureText(text).width + 24;
+      roundRect(g, px, footerY - 26, tw, 28, 14);
+      g.fillStyle = "#111827";
+      g.fill();
+      g.fillStyle = "#FFFFFF";
+      g.fillText(text, px + 12, footerY - 6);
+      px += tw + 10;
+    }
+    const ste = "StopTheExcuses.ca";
+    const steW = g.measureText(ste).width + 28;
+    roundRect(g, size - padding - steW, footerY - 26, steW, 28, 14);
+    g.fillStyle = "#111827";
+    g.fill();
+    g.fillStyle = "#FFFFFF";
+    g.fillText(ste, size - padding - steW + 14, footerY - 6);
 
-        <section className="flex flex-col gap-6">
-          {/* 1) Basics */}
-          <div className="bg-white/70 rounded-2xl p-5 shadow-lg border border-black/10">
-            <h2 className="text-xl font-bold mb-4">Grades & Basics</h2>
+    // ---- Tiny self-tests (don’t modify UI) ----
+    useEffect(() => {
+      const approx = (a: number, b: number, t = 1e-3) => Math.abs(a - b) <= t;
+      const w1 = 20 * 1.0;
+      console.assert(approx(w1, 20), "All-typical math");
+      const w2 = 10 * 1 + 5 * 1.5 + 2 * 2;
+      console.assert(approx(w2, 21.5), "Mixed weights math");
+      const cap = Math.min(24, 36);
+      console.assert(cap === 24, "Lab/shop cap");
+    }, []);
 
-            <div className="grid gap-4">
-              <div>
-                <span className="text-sm text-slate-700">Grades you teach</span>
-                <div className="grid grid-cols-6 gap-1 mt-1">
-                  {GRADE_CHOICES.map((g) => (
-                    <button
-                      key={g.key}
-                      type="button"
-                      onClick={() =>
-                        setGrades((prev) =>
-                          prev.includes(g.key)
-                            ? prev.filter((x) => x !== g.key)
-                            : [...prev, g.key]
-                        )
-                      }
-                      className={`px-2 py-1 rounded border text-sm font-semibold ${
-                        grades.includes(g.key)
-                          ? "bg-yellow-300/70 border-yellow-500"
-                          : "bg-white border-black/10"
-                      }`}
-                    >
-                      {g.key}
-                    </button>
-                  ))}
-                </div>
-                <div className="text-xs text-slate-600 mt-1">
-                  Multi-grade rooms supported — choose as many as apply (even
-                  3–4 grades).
-                </div>
-              </div>
+    // ---- UI helpers ----
+    function NumberField({
+      label,
+      value,
+      onChange,
+      disabled = false,
+      help,
+    }: {
+      label: string;
+      value: number;
+      onChange?: (v: number) => void;
+      disabled?: boolean;
+      help?: string;
+    }) {
+      return (
+        <label className={`block ${disabled ? "opacity-75" : ""}`}>
+          <span className="text-sm text-slate-700">{label}</span>
+          <input
+            type="number"
+            min={0}
+            value={value}
+            disabled={disabled}
+            onChange={(e) => onChange?.(Number(e.target.value))}
+            className="mt-1 w-full bg-white border border-black/10 rounded-xl px-3 py-2"
+          />
+          {help && <div className="text-xs text-slate-700 mt-1">{help}</div>}
+        </label>
+      );
+    }
 
-              <label className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={isLabShop}
-                  onChange={(e) => setIsLabShop(e.target.checked)}
-                />
-                <span className="text-sm text-slate-700">
-                  Lab/shop/technical class (cap 24)
-                </span>
-              </label>
+    function TagToggle({
+      label,
+      value,
+      onToggle,
+    }: {
+      label: string;
+      value: boolean;
+      onToggle: () => void;
+    }) {
+      return (
+        <button
+          type="button"
+          onClick={onToggle}
+          className={`text-sm px-3 py-2 rounded-lg border ${
+            value
+              ? "bg-black text-white border-black"
+              : "bg-white text-slate-800 border-black/10"
+          }`}
+        >
+          {label}
+        </button>
+      );
+    }
 
-              <label>
-                <span className="text-sm text-slate-700">
-                  Actual number of students
-                </span>
-                <input
-                  type="number"
-                  min={0}
-                  value={actual}
-                  onChange={(e) => setActual(Math.max(0, +e.target.value))}
-                  className="mt-1 w-full border border-black/10 rounded-xl px-3 py-2"
-                />
-              </label>
-            </div>
-          </div>
-
-          {/* 2) Complexity */}
-          <div className="bg-white/70 rounded-2xl p-5 shadow-lg border border-black/10">
-            <h2 className="text-xl font-bold mb-2">Complexity Calculator</h2>
-            <p className="text-sm text-slate-700 mb-3">
-              Enter each student once in the highest-weight category. Use{" "}
-              <strong>Auto typical</strong> to fill the remainder.
+    // ---- Render UI ----
+    return (
+      <div className="min-h-screen w-full bg-gradient-to-br from-yellow-200 to-yellow-400 text-slate-900 px-5 py-8">
+        <div className="max-w-6xl mx-auto">
+          <header className="mb-6">
+            <h1 className="text-4xl font-extrabold tracking-tight">
+              Share Your Class Story
+            </h1>
+            <p className="text-slate-800/90 mt-2 text-sm md:text-base">
+              Select your grades, enter your class and complexity, then generate
+              a square graphic ready to post.
             </p>
+          </header>
 
-            <div className="grid sm:grid-cols-2 gap-4">
-              <NumberField
-                label="Severe / high-cost (2.0)"
-                value={counts.severe}
-                onChange={(v) =>
-                  setCounts((p) => ({ ...p, severe: Number(v) || 0 }))
-                }
-              />
-              <NumberField
-                label="Mild/Moderate (1.5)"
-                value={counts.mildModerate}
-                onChange={(v) =>
-                  setCounts((p) => ({ ...p, mildModerate: Number(v) || 0 }))
-                }
-              />
-              <NumberField
-                label="ELL / Francization / Refugee (1.5)"
-                value={counts.ellFrancRefugee}
-                onChange={(v) =>
-                  setCounts((p) => ({ ...p, ellFrancRefugee: Number(v) || 0 }))
-                }
-              />
-              <NumberField
-                label="Targeted/Individualized supports (1.5)"
-                value={counts.targeted}
-                onChange={(v) =>
-                  setCounts((p) => ({ ...p, targeted: Number(v) || 0 }))
-                }
-              />
-              <NumberField
-                label="Gifted (1.25)"
-                value={counts.gifted}
-                onChange={(v) =>
-                  setCounts((p) => ({ ...p, gifted: Number(v) || 0 }))
-                }
-              />
+          <section className="flex flex-col gap-6">
+            {/* 1) Basics */}
+            <div className="bg-white/70 rounded-2xl p-5 shadow-lg border border-black/10">
+              <h2 className="text-xl font-bold mb-4">Grades & Basics</h2>
 
-              <div className="col-span-2 flex items-center justify-between bg-white border border-black/10 rounded-xl px-3 py-2">
-                <div className="flex items-center gap-2">
+              <div className="grid gap-4">
+                <div>
+                  <span className="text-sm text-slate-700">
+                    Grades you teach
+                  </span>
+                  <div className="grid grid-cols-6 gap-1 mt-1">
+                    {GRADE_CHOICES.map((g) => (
+                      <button
+                        key={g.key}
+                        type="button"
+                        onClick={() =>
+                          setGrades((prev) =>
+                            prev.includes(g.key)
+                              ? prev.filter((x) => x !== g.key)
+                              : [...prev, g.key]
+                          )
+                        }
+                        className={`px-2 py-1 rounded border text-sm font-semibold ${
+                          grades.includes(g.key)
+                            ? "bg-yellow-300/70 border-yellow-500"
+                            : "bg-white border-black/10"
+                        }`}
+                      >
+                        {g.key}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="text-xs text-slate-600 mt-1">
+                    Multi-grade rooms supported — choose as many as apply (even
+                    3–4 grades).
+                  </div>
+                </div>
+
+                <label className="flex items-center gap-2">
                   <input
                     type="checkbox"
-                    checked={autoTypical}
-                    onChange={(e) => setAutoTypical(e.target.checked)}
+                    checked={isLabShop}
+                    onChange={(e) => setIsLabShop(e.target.checked)}
                   />
-                  <span className="text-sm">
-                    Auto typical = Actual – other categories
+                  <span className="text-sm text-slate-700">
+                    Lab/shop/technical class (cap 24)
                   </span>
-                </div>
-                <div className="text-sm text-slate-700">Typical weight 1.0</div>
-              </div>
+                </label>
 
-              <NumberField
-                label="Typical (1.0)"
-                disabled={autoTypical}
-                value={
-                  autoTypical
-                    ? Math.max(0, actual - sumNonTypical)
-                    : counts.typical
-                }
-                onChange={(v) =>
-                  setCounts((p) => ({ ...p, typical: Number(v) || 0 }))
-                }
-                help={autoTypical ? "Auto-filled" : undefined}
-              />
+                <label>
+                  <span className="text-sm text-slate-700">
+                    Actual number of students
+                  </span>
+                  <input
+                    type="number"
+                    min={0}
+                    value={actual}
+                    onChange={(e) => setActual(Math.max(0, +e.target.value))}
+                    className="mt-1 w-full border border-black/10 rounded-xl px-3 py-2"
+                  />
+                </label>
+              </div>
             </div>
 
-            {mismatch && (
-              <div className="mt-3 text-orange-900 text-sm bg-orange-100 border border-orange-200 rounded-lg p-2">
-                Heads-up: Your category totals don’t equal actual students. With{" "}
-                <em>Auto typical</em> on, this reconciles automatically — but
-                please check for double-counting.
-              </div>
-            )}
+            {/* 2) Complexity */}
+            <div className="bg-white/70 rounded-2xl p-5 shadow-lg border border-black/10">
+              <h2 className="text-xl font-bold mb-2">Complexity Calculator</h2>
+              <p className="text-sm text-slate-700 mb-3">
+                Enter each student once in the highest-weight category. Use{" "}
+                <strong>Auto typical</strong> to fill the remainder.
+              </p>
 
-            <div className="mt-5">
-              <h3 className="text-lg font-bold">Reality Tags (optional)</h3>
-              <div className="mt-2 grid sm:grid-cols-2 gap-2">
-                <TagToggle
-                  label="Above STR"
-                  value={tags.aboveSTR}
-                  onToggle={() =>
-                    setTags((t) => ({ ...t, aboveSTR: !t.aboveSTR }))
+              <div className="grid sm:grid-cols-2 gap-4">
+                <NumberField
+                  label="Severe / high-cost (2.0)"
+                  value={counts.severe}
+                  onChange={(v) =>
+                    setCounts((p) => ({ ...p, severe: Number(v) || 0 }))
                   }
                 />
-                <TagToggle
-                  label="High Complexity"
-                  value={tags.highComplexity}
-                  onToggle={() =>
-                    setTags((t) => ({
-                      ...t,
-                      highComplexity: !t.highComplexity,
+                <NumberField
+                  label="Mild/Moderate (1.5)"
+                  value={counts.mildModerate}
+                  onChange={(v) =>
+                    setCounts((p) => ({ ...p, mildModerate: Number(v) || 0 }))
+                  }
+                />
+                <NumberField
+                  label="ELL / Francization / Refugee (1.5)"
+                  value={counts.ellFrancRefugee}
+                  onChange={(v) =>
+                    setCounts((p) => ({
+                      ...p,
+                      ellFrancRefugee: Number(v) || 0,
                     }))
                   }
                 />
-                <TagToggle
-                  label="Multi-Grade"
-                  value={tags.multiGrade}
-                  onToggle={() =>
-                    setTags((t) => ({ ...t, multiGrade: !t.multiGrade }))
+                <NumberField
+                  label="Targeted/Individualized supports (1.5)"
+                  value={counts.targeted}
+                  onChange={(v) =>
+                    setCounts((p) => ({ ...p, targeted: Number(v) || 0 }))
                   }
                 />
-                <TagToggle
-                  label="Short on Support Staff"
-                  value={tags.shortSupport}
-                  onToggle={() =>
-                    setTags((t) => ({ ...t, shortSupport: !t.shortSupport }))
+                <NumberField
+                  label="Gifted (1.25)"
+                  value={counts.gifted}
+                  onChange={(v) =>
+                    setCounts((p) => ({ ...p, gifted: Number(v) || 0 }))
                   }
                 />
+
+                <div className="col-span-2 flex items-center justify-between bg-white border border-black/10 rounded-xl px-3 py-2">
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={autoTypical}
+                      onChange={(e) => setAutoTypical(e.target.checked)}
+                    />
+                    <span className="text-sm">
+                      Auto typical = Actual – other categories
+                    </span>
+                  </div>
+                  <div className="text-sm text-slate-700">
+                    Typical weight 1.0
+                  </div>
+                </div>
+
+                <NumberField
+                  label="Typical (1.0)"
+                  disabled={autoTypical}
+                  value={
+                    autoTypical
+                      ? Math.max(0, actual - sumNonTypical)
+                      : counts.typical
+                  }
+                  onChange={(v) =>
+                    setCounts((p) => ({ ...p, typical: Number(v) || 0 }))
+                  }
+                  help={autoTypical ? "Auto-filled" : undefined}
+                />
               </div>
-              <div className="text-xs text-slate-700 mt-1">
-                These show up as small badges on your image footer — add context
-                without a wall of text.
+
+              {mismatch && (
+                <div className="mt-3 text-orange-900 text-sm bg-orange-100 border border-orange-200 rounded-lg p-2">
+                  Heads-up: Your category totals don’t equal actual students.
+                  With <em>Auto typical</em> on, this reconciles automatically —
+                  but please check for double-counting.
+                </div>
+              )}
+
+              <div className="mt-5">
+                <h3 className="text-lg font-bold">Reality Tags (optional)</h3>
+                <div className="mt-2 grid sm:grid-cols-2 gap-2">
+                  <TagToggle
+                    label="Above STR"
+                    value={tags.aboveSTR}
+                    onToggle={() =>
+                      setTags((t) => ({ ...t, aboveSTR: !t.aboveSTR }))
+                    }
+                  />
+                  <TagToggle
+                    label="High Complexity"
+                    value={tags.highComplexity}
+                    onToggle={() =>
+                      setTags((t) => ({
+                        ...t,
+                        highComplexity: !t.highComplexity,
+                      }))
+                    }
+                  />
+                  <TagToggle
+                    label="Multi-Grade"
+                    value={tags.multiGrade}
+                    onToggle={() =>
+                      setTags((t) => ({ ...t, multiGrade: !t.multiGrade }))
+                    }
+                  />
+                  <TagToggle
+                    label="Short on Support Staff"
+                    value={tags.shortSupport}
+                    onToggle={() =>
+                      setTags((t) => ({ ...t, shortSupport: !t.shortSupport }))
+                    }
+                  />
+                </div>
+                <div className="text-xs text-slate-700 mt-1">
+                  These show up as small badges on your image footer — add
+                  context without a wall of text.
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* 2.5) Results */}
-          <div className="bg-white/70 rounded-2xl p-5 shadow-lg border border-black/10">
-            <h2 className="text-xl font-bold mb-2">Results</h2>
-            <div className="grid grid-cols-2 gap-3 text-sm">
-              <div className="flex items-center gap-2 col-span-2">
-                <span className="text-sm">Header wording</span>
-                <select
-                  className="ml-auto text-sm bg-white border border-black/10 rounded-md px-2 py-1"
-                  value={headerMode}
-                  onChange={(e) => setHeaderMode(e.target.value as HeaderMode)}
-                >
-                  <option value={HeaderMode.Auto}>Smart (auto)</option>
-                  <option value={HeaderMode.Overcrowded}>
-                    Always “My class is overcrowded”
-                  </option>
-                  <option value={HeaderMode.Complex}>
-                    Always “My class is complex”
-                  </option>
-                </select>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-700">Target (should have)</span>
-                <span className="font-semibold">{baseTarget}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-700">Actual students</span>
-                <span className="font-semibold">{actual}</span>
-              </div>
-              <div className="flex justify-between col-span-2">
-                <span className="text-slate-700">Feels like (weighted)</span>
-                <span className="font-extrabold text-lg">{weighted}</span>
-              </div>
-              <div className="flex justify-between col-span-2">
-                <span
-                  className={`px-2 py-1 rounded-lg text-sm ${
-                    overLimit
-                      ? "bg-red-600/15 text-red-800"
-                      : "bg-emerald-600/15 text-emerald-800"
-                  }`}
-                >
-                  {overLimit
-                    ? "Over target"
-                    : "Within target (complexity story)"}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* 3) Create & Share */}
-          <div className="bg-white/70 rounded-2xl p-5 shadow-lg border border-black/10">
-            <h2 className="text-xl font-bold mb-4">Create & Share</h2>
-            <div className="grid sm:grid-cols-2 gap-2">
-              <button
-                onClick={drawGraphic}
-                className="rounded-xl bg-black hover:bg-gray-800 px-4 py-3 font-semibold text-white w-full"
-              >
-                Generate Graphic (Square PNG)
-              </button>
-              <button
-                onClick={() => navigator.clipboard.writeText(caption)}
-                className="rounded-xl bg-white hover:bg-gray-50 px-4 py-3 font-semibold border border-black/10 w-full"
-              >
-                Copy Suggested Caption
-              </button>
-            </div>
-            <p className="text-xs text-slate-600 mt-2">
-              Tip: After generating, scroll to the preview below to save the
-              image.
-            </p>
-          </div>
-        </section>
-
-        {/* Preview */}
-        {lastDataUrl && (
-          <section className="mt-6">
+            {/* 2.5) Results */}
             <div className="bg-white/70 rounded-2xl p-5 shadow-lg border border-black/10">
-              <h2 className="text-xl font-bold mb-2">Preview</h2>
-              <img
-                src={lastDataUrl}
-                alt="Preview"
-                className="rounded-xl w-full border border-black/10"
-              />
-              <a
-                href={lastDataUrl}
-                download="class-story.png"
-                className="inline-block mt-3 rounded-lg bg-black text-white px-4 py-2 font-semibold"
-              >
-                Download
-              </a>
+              <h2 className="text-xl font-bold mb-2">Results</h2>
+              <div className="grid grid-cols-2 gap-3 text-sm">
+                <div className="flex items-center gap-2 col-span-2">
+                  <span className="text-sm">Header wording</span>
+                  <select
+                    className="ml-auto text-sm bg-white border border-black/10 rounded-md px-2 py-1"
+                    value={headerMode}
+                    onChange={(e) =>
+                      setHeaderMode(e.target.value as HeaderMode)
+                    }
+                  >
+                    <option value={HeaderMode.Auto}>Smart (auto)</option>
+                    <option value={HeaderMode.Overcrowded}>
+                      Always “My class is overcrowded”
+                    </option>
+                    <option value={HeaderMode.Complex}>
+                      Always “My class is complex”
+                    </option>
+                  </select>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-700">Target (should have)</span>
+                  <span className="font-semibold">{baseTarget}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-700">Actual students</span>
+                  <span className="font-semibold">{actual}</span>
+                </div>
+                <div className="flex justify-between col-span-2">
+                  <span className="text-slate-700">Feels like (weighted)</span>
+                  <span className="font-extrabold text-lg">{weighted}</span>
+                </div>
+                <div className="flex justify-between col-span-2">
+                  <span
+                    className={`px-2 py-1 rounded-lg text-sm ${
+                      overLimit
+                        ? "bg-red-600/15 text-red-800"
+                        : "bg-emerald-600/15 text-emerald-800"
+                    }`}
+                  >
+                    {overLimit
+                      ? "Over target"
+                      : "Within target (complexity story)"}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* 3) Create & Share */}
+            <div className="bg-white/70 rounded-2xl p-5 shadow-lg border border-black/10">
+              <h2 className="text-xl font-bold mb-4">Create & Share</h2>
+              <div className="grid sm:grid-cols-2 gap-2">
+                <button
+                  onClick={drawGraphic}
+                  className="rounded-xl bg-black hover:bg-gray-800 px-4 py-3 font-semibold text-white w-full"
+                >
+                  Generate Graphic (Square PNG)
+                </button>
+                <button
+                  onClick={() => navigator.clipboard.writeText(caption)}
+                  className="rounded-xl bg-white hover:bg-gray-50 px-4 py-3 font-semibold border border-black/10 w-full"
+                >
+                  Copy Suggested Caption
+                </button>
+              </div>
+              <p className="text-xs text-slate-600 mt-2">
+                Tip: After generating, scroll to the preview below to save the
+                image.
+              </p>
             </div>
           </section>
-        )}
+
+          {/* Preview */}
+          {lastDataUrl && (
+            <section className="mt-6">
+              <div className="bg-white/70 rounded-2xl p-5 shadow-lg border border-black/10">
+                <h2 className="text-xl font-bold mb-2">Preview</h2>
+                <img
+                  src={lastDataUrl}
+                  alt="Preview"
+                  className="rounded-xl w-full border border-black/10"
+                />
+                <a
+                  href={lastDataUrl}
+                  download="class-story.png"
+                  className="inline-block mt-3 rounded-lg bg-black text-white px-4 py-2 font-semibold"
+                >
+                  Download
+                </a>
+              </div>
+            </section>
+          )}
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
