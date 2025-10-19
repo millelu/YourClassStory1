@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Share Your Class Story</title>
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brandYellow: "#fef08a",
+              brandGold: "#facc15",
+              brandRed: "#dc2626",
+              brandGreen: "#86efac",
+            },
+            fontFamily: { sans: ["Inter", "ui-sans-serif", "system-ui"] },
+          },
+        },
+      };
+    </script>
+
+    <!-- Inter font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body
+    class="font-sans min-h-screen bg-gradient-to-br from-yellow-200 to-yellow-400 text-gray-900"
+  >
+    <div id="root"></div>
+  </body>
+</html>
