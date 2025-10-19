@@ -311,17 +311,17 @@ export default function App() {
 
     // Remedies (same size as summary)
     const remedies =
-      "If a class size must exceed the student–teacher ratio, school divisions are compelled to remedy the additional workload by making operational adjustments to open new classrooms, hire additional teachers, assistants, and professional services for that class, or provide teachers with additional specialist FTE, prep, or release time.";
+      "The ATA’s $500 million/year proposal for a complexity-weighted Student-Teacher Ratio (STR) would compel school administrators and school divisions to remedy classes that exceed the weighted STR by hiring additional teachers, assigning multiple teachers to a classroom, increasing assistance and professional supports, or providing teachers with additional release time. This flexibility ensures that no student in Alberta goes without an education due to hard caps, while the province continues building more classrooms to meet future needs.";
     const remediesStartY = Math.min(barsBottom + 80, size - padding - 200);
     g.fillStyle = "#111827";
-    g.font = "700 34px Inter, ui-sans-serif, system-ui, -apple-system";
+    g.font = "700 30px Inter, ui-sans-serif, system-ui, -apple-system";
     const remediesBottom = wrapText(
       g,
       remedies,
       padding,
       remediesStartY,
       size - padding * 2,
-      44
+      40
     );
 
     // Footer pills + StopTheExcuses.ca
