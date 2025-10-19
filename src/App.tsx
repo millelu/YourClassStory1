@@ -209,6 +209,55 @@ export default function App() {
     if (t.shortSupport) pills.push("Short on Support Staff");
     return pills;
   }
+  /** Measure how tall wrapped text would be without drawing. */
+  function measureWrappedHeight(
+    ctx: Ctx,
+    text: string,
+    maxWidth: number,
+    lineHeight: number
+  ): number {
+    const words = String(text || "").split(" ");
+    let line = "";
+    let height = lineHeight; // at least one line
+    for (let n = 0; n < words.length; n++) {
+      const test = line + words[n] + " ";
+      const width = ctx.measureText(test).width;
+      if (width > maxWidth && n > 0) {
+        line = words[n] + " ";
+        height += lineHeight;
+      } else {
+        line = test;
+      }
+    }
+    return height;
+  }
+
+  /** Auto-fit a paragraph by reducing font size until it fits the box. Returns the final baseline Y. */
+  function drawAutoFitParagraph(
+    ctx: Ctx,
+    text: string,
+    x: number,
+    y: number,
+    maxWidth: number,
+    maxHeight: number,
+    startPx = 30,
+    minPx = 16
+  ): number {
+    for (let px = startPx; px >= minPx; px -= 2) {
+      const lh = Math.round(px * 1.3);
+      ctx.font = `700 ${px}px Inter, ui-sans-serif, system-ui, -apple-system`;
+      const h = measureWrappedHeight(ctx, text, maxWidth, lh);
+      if (h <= maxHeight) {
+        // draw for real with the same metrics
+        return wrapText(ctx, text, x, y, maxWidth, lh);
+      }
+    }
+    // If still too tall, draw at the smallest size available.
+    const px = minPx;
+    const lh = Math.round(px * 1.3);
+    ctx.font = `700 ${px}px Inter, ui-sans-serif, system-ui, -apple-system`;
+    return wrapText(ctx, text, x, y, maxWidth, lh);
+  }
 
   // ---- Graphic generation ----
   function drawGraphic() {
@@ -310,44 +359,51 @@ export default function App() {
     const barsBottom = Math.max(b0, b1, b2);
 
     // Remedies (same size as summary)
-    const remedies =
-      "The ATA’s $500 million/year proposal for a complexity-weighted Student-Teacher Ratio (STR) would compel school administrators and school divisions to remedy classes that exceed the weighted STR by hiring additional teachers, assigning multiple teachers to a classroom, increasing assistance and professional supports, or providing teachers with additional release time. This flexibility ensures that no student in Alberta goes without an education due to hard caps, while the province continues building more classrooms to meet future needs.";
-    const remediesStartY = Math.min(barsBottom + 80, size - padding - 200);
-    g.fillStyle = "#111827";
-    g.font = "700 30px Inter, ui-sans-serif, system-ui, -apple-system";
-    const remediesBottom = wrapText(
-      g,
-      remedies,
-      padding,
-      remediesStartY,
-      size - padding * 2,
-      40
-    );
+// ✅ Keep your final wording exactly as requested:
+const remedies =
+  "The ATA’s $500 million/year proposal for a complexity-weighted Student-Teacher Ratio (STR) would compel school administrators and school divisions to remedy classes that exceed the weighted STR by hiring additional teachers, assigning multiple teachers to a classroom, increasing assistance and professional supports, or providing teachers with additional release time. This flexibility ensures that no student in Alberta goes without an education due to hard caps, while the province continues building more classrooms to meet future needs.";
 
-    // Footer pills + StopTheExcuses.ca
-    const footerY = Math.max(remediesBottom + 36, size - padding + 8);
-    const pills = buildPills(tags, overLimit);
-    let px = padding;
-    g.font = "700 20px Inter, ui-sans-serif, system-ui, -apple-system";
-    for (const text of pills) {
-      const tw = g.measureText(text).width + 24;
-      roundRect(g, px, footerY - 26, tw, 28, 14);
-      g.fillStyle = "#111827";
-      g.fill();
-      g.fillStyle = "#FFFFFF";
-      g.fillText(text, px + 12, footerY - 6);
-      px += tw + 10;
-    }
-    const ste = "StopTheExcuses.ca";
-    const steW = g.measureText(ste).width + 28;
-    roundRect(g, size - padding - steW, footerY - 26, steW, 28, 14);
-    g.fillStyle = "#111827";
-    g.fill();
-    g.fillStyle = "#FFFFFF";
-    g.fillText(ste, size - padding - steW + 14, footerY - 6);
+// Place the paragraph safely under the bars
+const remediesStartY = Math.min(barsBottom + 80, size - padding - 220);
+g.fillStyle = "#111827";
 
-    setLastDataUrl(canvas.toDataURL("image/png"));
-  }
+// Reserve vertical room so pills/footer can still render
+const reservedForFooter = 76; // ~ pills + spacing
+const availableHeight = Math.max(60, size - padding - reservedForFooter - remediesStartY);
+
+// ✅ Auto-fit the paragraph. It will reduce font size as needed to fit.
+const remediesBottom = drawAutoFitParagraph(
+  g,
+  remedies,
+  padding,
+  remediesStartY,
+  size - padding * 2,
+  availableHeight,
+  30, // start size
+  16  // minimum size
+);
+
+// Footer pills + StopTheExcuses.ca (unchanged)
+const footerY = Math.max(remediesBottom + 36, size - padding + 8);
+const pills = buildPills(tags, overLimit);
+let px = padding;
+g.font = "700 20px Inter, ui-sans-serif, system-ui, -apple-system";
+for (const text of pills) {
+  const tw = g.measureText(text).width + 24;
+  roundRect(g, px, footerY - 26, tw, 28, 14);
+  g.fillStyle = "#111827";
+  g.fill();
+  g.fillStyle = "#FFFFFF";
+  g.fillText(text, px + 12, footerY - 6);
+  px += tw + 10;
+}
+const ste = "StopTheExcuses.ca";
+const steW = g.measureText(ste).width + 28;
+roundRect(g, size - padding - steW, footerY - 26, steW, 28, 14);
+g.fillStyle = "#111827";
+g.fill();
+g.fillStyle = "#FFFFFF";
+g.fillText(ste, size - padding - steW + 14, footerY - 6);
 
   // ---- Tiny self-tests (don’t modify UI) ----
   useEffect(() => {
